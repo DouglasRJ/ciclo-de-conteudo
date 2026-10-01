@@ -1,0 +1,7 @@
+{
+  "slug": "exemplo-frase",
+  "formato": "feed",
+  "slides": [
+    { "tipo": "frase", "frase": "Quem anota no dia não *esquece* no fim do mês.", "assinatura": "Sua Marca" }
+  ]
+}

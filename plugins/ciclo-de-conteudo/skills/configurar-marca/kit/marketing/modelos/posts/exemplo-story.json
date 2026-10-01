@@ -1,0 +1,9 @@
+{
+  "slug": "exemplo-story",
+  "formato": "story",
+  "slides": [
+    { "tipo": "capa", "tema": "Enquete", "titulo": "Quanto tempo você *perde* por semana conferindo coisa?" },
+    { "tipo": "mensagem", "titulo": "Uma mensagem que resolve", "mensagem": "Oi! Confirma seu horário de amanhã às 15h? Responde com 1 para sim e 2 para remarcar.", "nota": "Salva e usa quando precisar." },
+    { "tipo": "frase", "frase": "Organizar não é *frescura*. É tempo de volta.", "assinatura": "Sua Marca" }
+  ]
+}

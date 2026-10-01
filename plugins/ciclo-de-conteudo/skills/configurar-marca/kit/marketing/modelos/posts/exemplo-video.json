@@ -1,0 +1,18 @@
+{
+  "slug": "exemplo-video",
+  "formato": "story",
+  "slides": [
+    { "tipo": "capa", "tema": "Teste de 3 segundos", "titulo": "Rápido: o que você posta *amanhã*?" },
+    { "tipo": "frase", "frase": "3... 2... *1...*" },
+    { "tipo": "texto", "tema": "Dica", "titulo": "Teve que pensar?", "texto": "Normal. Escolha **1 assunto por semana** e tire 5 posts dele." },
+    { "tipo": "tela", "tema": "Num lugar só", "titulo": "A semana já pronta", "texto": "**O que sai em cada dia,** antes da segunda.", "barra": "Semana", "tela": [
+      { "metricas": [["Posts prontos", "5"], ["Horas poupadas", "3,5 h"]] },
+      { "rotulo": "Esta semana" },
+      { "cartao": "Carrossel", "detalhe": "Segunda · 19h", "icone": "documento", "status": "ok" },
+      { "cartao": "Vídeo curto", "detalhe": "Terça · 19h", "icone": "calendario", "status": "ok" },
+      { "cartao": "Story com enquete", "detalhe": "Quarta · 19h", "icone": "calendario", "status": "pendente" },
+      { "cartao": "Frase", "detalhe": "Quinta · 19h", "icone": "documento", "status": "alerta" }
+    ] },
+    { "tipo": "cta", "titulo": "Não falta ideia. Falta um método.", "botao": "Comece grátis" }
+  ]
+}

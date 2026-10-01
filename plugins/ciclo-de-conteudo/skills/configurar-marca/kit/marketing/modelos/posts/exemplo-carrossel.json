@@ -1,0 +1,19 @@
+{
+  "slug": "exemplo-carrossel",
+  "formato": "feed",
+  "fundo": "brilho",
+  "slides": [
+    { "tipo": "capa", "tema": "Rotina", "titulo": "Você não precisa de *mais* tempo.", "texto": "Precisa parar de fazer a mesma coisa 3 vezes." },
+    { "tipo": "texto", "tema": "O problema", "titulo": "Anotar no caderno, no celular e na cabeça", "texto": "Cada informação em um lugar faz você **conferir tudo de novo** toda semana." },
+    { "tipo": "lista", "titulo": "4 passos para juntar tudo", "itens": ["**Escolha 1 lugar** e só anote ali", "Anote **no dia**, não no fim do mês", "Separe 10 minutos na segunda", "Apague o que já resolveu"] },
+    { "tipo": "mensagem", "titulo": "Para avisar o cliente", "mensagem": "Oi, Ana! Passando para lembrar do seu horário amanhã às 15h. Até lá! 😊", "nota": "Copie, troque o nome e mande." },
+    { "tipo": "tela", "tema": "Num lugar só", "titulo": "A semana na *primeira* tela", "texto": "**O que está pronto e o que falta.** Sem abrir 3 apps.", "barra": "Início", "tela": [
+      { "metricas": [["Feito na semana", "12"], ["Falta", "3"]] },
+      { "rotulo": "Hoje" },
+      { "cartao": "Ana Souza", "detalhe": "Seg · 15h", "status": "ok" },
+      { "cartao": "Bruno Lima", "detalhe": "Seg · 17h", "status": "pendente" },
+      { "cartao": "Carla Dias", "detalhe": "Sex · 10h", "status": "alerta" }
+    ] },
+    { "tipo": "cta", "titulo": "Junte tudo num lugar só.", "texto": "Leva 2 minutos para começar." }
+  ]
+}

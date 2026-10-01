@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Modelos de post</title>
+<script src="assets/marca.js"></script>
+<style>
+/* Cores e fonte vêm do marca.json (assets/marca.js troca estas variáveis). Os valores daqui são só o padrão. */
+:root {
+  --primaria: #4F46E5;     /* fundo da capa e da chamada, destaques */
+  --secundaria: #22D3EE;   /* brilho de canto */
+  --escura: #312E81;       /* brilho de canto, sombra */
+  --fundo-escuro: #0B0B12; /* slide de frase e títulos nos slides claros */
+  --claro: #F5F5F7;        /* fundo dos slides claros */
+  --branco: #FFFFFF;
+  --texto: #2B2B2B;
+  --apagado: #6B6B6B;
+  --ok: #08874A;
+  --alerta: #B26A00;
+  --erro: #E20404;
+  --fonte: "Poppins";
+  --w: 1080px;
+  --h: 1350px;
+  --m: 96px;
+  --rodape-desce: 35px;
+}
+.story { --h: 1920px; --m: 110px; --rodape-desce: 23px; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--fonte), system-ui, sans-serif; background: #ddd; -webkit-font-smoothing: antialiased; }
+#slides { display: flex; flex-wrap: wrap; gap: 40px; padding: 40px; }
+
+.slide {
+  position: relative; overflow: hidden; flex: none;
+  width: var(--w); height: var(--h); padding: var(--m);
+  display: flex; flex-direction: column;
+  background: var(--claro); color: var(--fundo-escuro);
+}
+.slide.cor { background: var(--primaria); color: var(--branco); }
+.slide.escuro { background: var(--fundo-escuro); color: var(--branco); }
+
+/* Elementos comuns */
+.simbolo-fundo { position: absolute; width: 860px; right: -230px; bottom: -150px; color: var(--branco); opacity: .1; }
+.simbolo-fundo svg { width: 100%; height: auto; display: block; }
+.escuro .simbolo-fundo { color: var(--primaria); opacity: .18; }
+.slide.fim .simbolo-fundo { width: 620px; right: -200px; bottom: -260px; }
+.corpo { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 44px; position: relative; }
+/* Rodapé descido para a linha de base do texto cair numa pauta do fundo caderno (pauta a cada 68px); vale em todos os fundos para ficar igual. */
+.rodape { display: flex; align-items: center; justify-content: space-between; position: relative; top: var(--rodape-desce); font-size: 26px; font-weight: 400; color: var(--apagado); }
+.rodape .marca { display: flex; align-items: center; gap: 14px; }
+.rodape .marca svg { width: 30px; height: auto; color: var(--primaria); }
+.cor .rodape .marca svg { color: var(--branco); }
+.rodape .pagina { font-weight: 200; letter-spacing: .04em; }
+.cor .rodape, .escuro .rodape { color: rgba(255,255,255,.85); }
+
+/* Tema: pílula nas páginas de dentro; na capa vira paralelogramo de lados inclinados (base deslocada à direita), cantos retos. */
+.tema { align-self: flex-start; white-space: nowrap; font-size: 28px; font-weight: 600; letter-spacing: .02em; padding: 12px 28px; border-radius: 999px; background: var(--branco); color: var(--primaria); }
+.capa .tema { font-size: 42px; font-weight: 700; padding: 12px 38px; border-radius: 0; clip-path: polygon(0 0, calc(100% - .25em) 0, 100% 100%, .25em 100%); }
+.claro .tema { background: var(--primaria); color: var(--branco); }
+
+h1, h2 { font-weight: 700; letter-spacing: -0.02em; text-wrap: balance; }
+h1 { font-size: 104px; line-height: 1.14; }
+h2 { font-size: 68px; line-height: 1.1; }
+.story h1 { font-size: 118px; }
+.story h2 { font-size: 78px; }
+.story .slide.claro p.texto { font-size: 46px; max-width: 28ch; }
+p.texto { font-size: 40px; line-height: 1.45; color: var(--texto); max-width: 30ch; }
+.cor p.texto { color: rgba(255,255,255,.92); }
+
+/* Destaque: *palavra* no texto */
+mark { background: none; color: var(--primaria); }
+.cor mark { display: inline-block; background: var(--branco); color: var(--primaria); line-height: 1; padding: .04em .3em .2em .32em; clip-path: polygon(0 0, calc(100% - .17em) 0, 100% 100%, .17em 100%); }
+/* Palavra sem p, g, q, j, y ou ç: mesmo respiro em cima e embaixo. */
+.cor mark.sem-perna { padding-bottom: .06em; }
+.escuro mark { color: var(--primaria); }
+
+/* Story: sem "arrasta" nem contador (no story a pessoa toca, não arrasta). */
+.story .arrasta, .story .rodape .pagina { display: none; }
+
+/* Capa */
+.arrasta { position: absolute; right: var(--m); bottom: calc(var(--m) + 70px); display: flex; align-items: center; gap: 16px; font-size: 28px; font-weight: 600; }
+.arrasta svg { width: 64px; }
+
+/* Lista */
+ol.itens { list-style: none; display: flex; flex-direction: column; gap: 34px; }
+ol.itens li { display: grid; grid-template-columns: 76px 1fr; gap: 28px; align-items: start; font-size: 40px; line-height: 1.35; color: var(--texto); }
+ol.itens li b { color: var(--fundo-escuro); font-weight: 600; }
+ol.itens .n { width: 76px; height: 76px; border-radius: 50%; background: var(--primaria); color: var(--branco); display: grid; place-items: center; font-weight: 700; font-size: 36px; }
+
+/* Mensagem pronta */
+.balao { background: var(--branco); border-radius: 44px 44px 44px 12px; padding: 48px 52px; font-size: 40px; line-height: 1.45; color: var(--texto); box-shadow: 0 18px 50px rgba(0,0,0,.08); display: flex; flex-direction: column; gap: 22px; }
+.balao .rotulo { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 600; color: var(--primaria); letter-spacing: .02em; }
+.balao .rotulo svg { width: 26px; height: auto; color: var(--primaria); }
+.nota { font-size: 30px; color: var(--apagado); max-width: 34ch; }
+
+/* Frase */
+.frase { font-size: 84px; font-weight: 700; line-height: 1.12; letter-spacing: -0.02em; text-wrap: balance; }
+.story .frase { font-size: 96px; }
+.assinatura { font-size: 32px; font-weight: 200; color: rgba(255,255,255,.75); }
+
+/* Chamada final */
+.logo { width: 560px; color: var(--branco); }
+.logo svg { width: 100%; height: auto; display: block; }
+/* Botão: retângulo de canto levemente arredondado, sem seta. */
+.botao { align-self: flex-start; display: flex; align-items: center; background: var(--branco); color: var(--primaria); font-weight: 700; font-size: 56px; padding: 16px 40px; border-radius: .2em; }
+.tagline { font-size: 30px; font-weight: 600; color: rgba(255,255,255,.9); }
+
+/* Foto de fundo: moldura arredondada com borda na cor da marca; embaixo, vidro desfocado que vira degradê até a cor. */
+.slide.foto { padding: 0; background: var(--fundo-escuro); color: var(--branco); }
+.foto-img { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.moldura { position: absolute; inset: 44px 48px; border-radius: 64px; overflow: hidden; border: 3px solid var(--primaria); box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset; }
+.moldura .vidro { position: absolute; inset: 0; -webkit-backdrop-filter: blur(26px) saturate(1.25); backdrop-filter: blur(26px) saturate(1.25); -webkit-mask-image: linear-gradient(to bottom, transparent 64%, #000 80%); mask-image: linear-gradient(to bottom, transparent 64%, #000 80%); }
+.slide.feed .moldura .vidro { -webkit-mask-image: linear-gradient(to bottom, transparent 58%, #000 76%); mask-image: linear-gradient(to bottom, transparent 58%, #000 76%); }
+.moldura .degrade { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.28) 0%, rgba(0,0,0,0) 18%, rgba(0,0,0,0) 52%, color-mix(in srgb, var(--escura) 50%, transparent) 68%, color-mix(in srgb, var(--primaria) 82%, transparent) 86%, var(--primaria) 100%); }
+.moldura .topo { position: absolute; top: 76px; left: 60px; right: 60px; text-align: center; font-size: 84px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.08; text-wrap: balance; text-shadow: 0 4px 30px rgba(0,0,0,.35); }
+.moldura .base { position: absolute; left: 60px; right: 60px; bottom: 96px; display: flex; flex-direction: column; gap: 52px; }
+.moldura .base .logo { width: 430px; }
+.moldura .base p { font-size: 46px; line-height: 1.38; font-weight: 400; text-wrap: pretty; }
+.moldura .base p b, .slide.foto mark { color: var(--branco); background: none; font-weight: 700; padding: 0; }
+.moldura .pagina-foto { position: absolute; right: 60px; top: 40px; font-size: 26px; font-weight: 200; color: rgba(255,255,255,.85); }
+.slide.feed .moldura .topo { font-size: 72px; top: 64px; }
+.slide.feed .moldura .base { bottom: 72px; gap: 40px; }
+.slide.feed .moldura .base p { font-size: 42px; }
+
+/* Variante vidro: cartão fosco claro sobre a foto inteira. */
+.moldura.cartao .degrade { background: linear-gradient(to bottom, rgba(0,0,0,.28) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 55%, rgba(0,0,0,.35) 100%); }
+.moldura.cartao .vidro { display: none; }
+.moldura.cartao { inset: 0; border: none; border-radius: 0; box-shadow: none; }
+.moldura.cartao .topo { top: 120px; }
+.moldura.cartao .pagina-foto { top: 56px; right: 64px; }
+.moldura.cartao .base { left: 56px; right: 56px; bottom: 64px; padding: 56px 56px 60px; border-radius: 44px; background: linear-gradient(160deg, rgba(255,255,255,.2), rgba(30,20,15,.28)); -webkit-backdrop-filter: blur(30px) saturate(1.6); backdrop-filter: blur(30px) saturate(1.6); border: 1.5px solid rgba(255,255,255,.35); box-shadow: 0 30px 80px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.4); }
+.moldura.cartao .base .botao { font-size: 34px; padding: 22px 40px; background: var(--primaria); color: var(--branco); }
+
+/* Tela: título no topo e um celular desenhado que sai pela base. Os rótulos têm que ser os do seu produto. */
+.slide.tela { padding: var(--m) var(--m) 0; }
+.tela .topo-tela { position: relative; display: flex; flex-direction: column; gap: 26px; }
+.tela .topo-tela h2 { color: var(--branco); }
+.tela .topo-tela p { font-size: 40px; line-height: 1.4; color: rgba(255,255,255,.92); text-wrap: pretty; }
+.tela .topo-tela p b { font-weight: 700; color: var(--branco); }
+.tela .linha-tema { display: flex; gap: 16px; align-items: center; }
+.selo { white-space: nowrap; font-size: 26px; font-weight: 600; padding: 10px 24px; border-radius: 999px; border: 2px solid rgba(255,255,255,.8); color: var(--branco); }
+.celular { position: absolute; left: 50%; transform: translateX(-50%); bottom: -60px; width: 800px; height: 1240px; padding: 20px; border-radius: 96px; background: #141414; box-shadow: 0 40px 90px color-mix(in srgb, var(--escura) 45%, transparent); }
+/* No feed (1350 de altura) o celular encolhe e desce para não cobrir o título. */
+.slide.tela.feed .celular { transform: translateX(-50%) scale(.74); transform-origin: 50% 100%; }
+.tela-app { width: 100%; height: 100%; border-radius: 78px; overflow: hidden; background: #F7F7F8; display: flex; flex-direction: column; font-size: 30px; color: #1F1F1F; }
+.status { display: flex; justify-content: space-between; padding: 30px 60px 10px; font-size: 26px; font-weight: 600; }
+.barra-app { display: flex; align-items: center; gap: 18px; padding: 18px 44px 22px; background: var(--branco); border-bottom: 1px solid #ECECEC; }
+.barra-app .simb { width: 34px; color: var(--primaria); display: flex; }
+.barra-app .simb svg { width: 100%; height: auto; }
+.barra-app b { font-size: 34px; font-weight: 700; }
+.conteudo { flex: 1; padding: 30px 40px; display: flex; flex-direction: column; gap: 22px; }
+.conteudo .titulo-tela { font-size: 44px; font-weight: 700; }
+.conteudo .sub { font-size: 26px; line-height: 1.4; color: #8A8A8A; margin-top: -10px; }
+.campo { display: flex; flex-direction: column; gap: 10px; }
+.campo span { font-size: 24px; color: #8A8A8A; }
+.campo div { background: var(--branco); border: 1.5px solid #E3E3E3; border-radius: 22px; padding: 22px 26px; font-size: 30px; }
+.campo.foco div { border-color: var(--primaria); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primaria) 12%, transparent); }
+.cartao-app { background: var(--branco); border: 1.5px solid #EAEAEA; border-radius: 28px; padding: 26px 28px; display: flex; align-items: center; gap: 22px; }
+.cartao-app.ativo { border-color: var(--primaria); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primaria) 12%, transparent); }
+.cartao-app .ico { width: 64px; height: 64px; border-radius: 20px; background: color-mix(in srgb, var(--primaria) 10%, transparent); display: grid; place-items: center; flex: none; }
+.cartao-app .ico svg { width: 32px; color: var(--primaria); }
+.cartao-app .txt { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.cartao-app .txt b { font-size: 30px; font-weight: 600; }
+.cartao-app .txt small { font-size: 24px; color: #8A8A8A; }
+.cartao-app .valor { font-size: 28px; font-weight: 600; }
+.status-tag { font-size: 22px; font-weight: 600; padding: 6px 16px; border-radius: 999px; border: 1.5px solid; white-space: nowrap; }
+.status-tag.ok { color: var(--ok); background: color-mix(in srgb, var(--ok) 9%, white); border-color: color-mix(in srgb, var(--ok) 28%, white); }
+.status-tag.pendente { color: var(--alerta); background: color-mix(in srgb, var(--alerta) 9%, white); border-color: color-mix(in srgb, var(--alerta) 30%, white); }
+.status-tag.alerta { color: var(--erro); background: color-mix(in srgb, var(--erro) 8%, white); border-color: color-mix(in srgb, var(--erro) 25%, white); }
+.metricas { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.metricas div { background: var(--branco); border: 1.5px solid #EAEAEA; border-radius: 28px; padding: 24px 26px; display: flex; flex-direction: column; gap: 6px; }
+.metricas span { font-size: 22px; color: #8A8A8A; }
+.metricas b { font-size: 38px; font-weight: 700; }
+.botao-app { background: var(--primaria); color: var(--branco); text-align: center; font-weight: 600; font-size: 30px; padding: 24px; border-radius: 22px; }
+.botao-app.contorno { background: var(--branco); color: var(--primaria); border: 2px solid var(--primaria); }
+.rotulo-lista { font-size: 24px; font-weight: 600; color: #8A8A8A; margin-top: 6px; }
+/* Perfil e ação no cartão */
+.perfil { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 6px 0 4px; }
+.perfil .foto-perfil { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--secundaria), var(--primaria)); color: var(--branco); display: grid; place-items: center; font-size: 44px; font-weight: 700; }
+.perfil b { font-size: 36px; font-weight: 700; }
+.perfil small { font-size: 24px; color: #8A8A8A; }
+.cartao-app .acao { font-size: 24px; font-weight: 600; color: var(--branco); background: var(--primaria); padding: 12px 22px; border-radius: 999px; }
+
+/* Conversa com um assistente dentro do app */
+.msg { max-width: 86%; font-size: 27px; line-height: 1.42; padding: 20px 24px; border-radius: 28px; }
+.msg b { font-weight: 600; }
+.msg.assistente { align-self: flex-start; background: var(--branco); border: 1.5px solid #EAEAEA; border-top-left-radius: 8px; }
+.msg.voce { align-self: flex-end; background: var(--primaria); color: var(--branco); border-top-right-radius: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 12px; }
+.chips span { font-size: 24px; font-weight: 500; padding: 10px 20px; border-radius: 999px; background: var(--branco); border: 1.5px solid #E3E3E3; }
+.chips span.on { border-color: var(--primaria); color: var(--primaria); background: color-mix(in srgb, var(--primaria) 6%, transparent); }
+.entrada { margin-top: auto; background: var(--branco); border: 1.5px solid #E3E3E3; border-radius: 999px; padding: 20px 28px; color: #A0A0A0; font-size: 27px; }
+
+/* Conversa de mensageiro desenhada */
+.chat { flex: 1; background: #EFE7DE; padding: 30px 30px; display: flex; flex-direction: column; gap: 18px; }
+.chat .barra-app { margin: -30px -30px 10px; background: #F6F6F6; }
+.chat .avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--primaria); display: grid; place-items: center; }
+.chat .avatar svg { width: 30px; height: auto; color: var(--branco); }
+.chat .data { align-self: center; font-size: 22px; background: #FFFFFFD0; color: #6B6B6B; padding: 6px 18px; border-radius: 12px; }
+.bolha { align-self: flex-start; max-width: 92%; background: var(--branco); border-radius: 8px 30px 30px 30px; padding: 22px 26px 14px; font-size: 28px; line-height: 1.42; box-shadow: 0 1px 1px rgba(0,0,0,.08); }
+.bolha .hora { display: block; text-align: right; font-size: 20px; color: #9A9A9A; margin-top: 6px; }
+.bolha .link { color: #0B6FB8; }
+
+/* Fundo: post.fundo = brilho (padrão, vale para todas as cores) | caderno | liso | pontos | grade | simbolo (estes só nos slides claros) */
+.slide .padrao { position: absolute; inset: 0; pointer-events: none; }
+.slide .padrao svg { display: none; }
+.fundo-pontos .slide.claro .padrao { background-image: radial-gradient(color-mix(in srgb, var(--primaria) 22%, transparent) 2.6px, transparent 3.2px); background-size: 40px 40px; background-position: 20px 20px; -webkit-mask-image: linear-gradient(135deg, #000 0%, rgba(0,0,0,.15) 55%, transparent 80%); mask-image: linear-gradient(135deg, #000 0%, rgba(0,0,0,.15) 55%, transparent 80%); }
+.fundo-caderno .slide.claro { background: #FBF8F4; }
+.fundo-caderno .slide.claro .padrao { background:
+  linear-gradient(90deg, transparent 62px, color-mix(in srgb, var(--primaria) 45%, transparent) 62px, color-mix(in srgb, var(--primaria) 45%, transparent) 65px, transparent 65px),
+  repeating-linear-gradient(to bottom, transparent 0 66px, rgba(40,60,90,.09) 66px 68px); }
+.fundo-grade .slide.claro { background: #FAFAFA; }
+.fundo-grade .slide.claro .padrao { background-image: linear-gradient(rgba(0,0,0,.05) 1.5px, transparent 1.5px), linear-gradient(90deg, rgba(0,0,0,.05) 1.5px, transparent 1.5px); background-size: 72px 72px; background-position: -1px -1px; -webkit-mask-image: radial-gradient(ellipse at 100% 0%, #000 0%, rgba(0,0,0,.5) 45%, transparent 85%); mask-image: radial-gradient(ellipse at 100% 0%, #000 0%, rgba(0,0,0,.5) 45%, transparent 85%); }
+.fundo-brilho .slide.claro .padrao { background:
+  radial-gradient(circle at 105% -5%, color-mix(in srgb, var(--primaria) 15%, transparent) 0%, color-mix(in srgb, var(--primaria) 5%, transparent) 28%, transparent 50%),
+  radial-gradient(circle at -10% 108%, color-mix(in srgb, var(--secundaria) 13%, transparent) 0%, color-mix(in srgb, var(--secundaria) 4%, transparent) 30%, transparent 52%); }
+.fundo-brilho .slide.cor .padrao { background:
+  radial-gradient(circle at 105% -5%, color-mix(in srgb, var(--secundaria) 45%, transparent) 0%, color-mix(in srgb, var(--secundaria) 14%, transparent) 30%, transparent 55%),
+  radial-gradient(circle at -10% 108%, color-mix(in srgb, var(--escura) 45%, transparent) 0%, color-mix(in srgb, var(--escura) 14%, transparent) 32%, transparent 58%); }
+.fundo-brilho .slide.escuro .padrao { background:
+  radial-gradient(circle at 105% -5%, color-mix(in srgb, var(--primaria) 24%, transparent) 0%, color-mix(in srgb, var(--primaria) 7%, transparent) 30%, transparent 55%),
+  radial-gradient(circle at -10% 108%, color-mix(in srgb, var(--escura) 22%, transparent) 0%, color-mix(in srgb, var(--escura) 6%, transparent) 30%, transparent 55%); }
+.fundo-simbolo .slide.claro .padrao svg { display: block; position: absolute; width: 760px; height: auto; right: -300px; top: -120px; color: var(--primaria); opacity: .07; }
+</style>
+</head>
+<body>
+<div id="slides"></div>
+<script>
+// Monta os slides a partir de um post em JSON. Chamado pelo render.mjs com window.montar(post, marca).
+const SETA = '<svg viewBox="0 0 64 32" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h54M44 4l14 12-14 12"/></svg>';
+
+function esc(s) { return String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+// *texto* vira destaque, **texto** vira negrito, \n vira quebra de linha.
+function fmt(s) {
+  return esc(s)
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+    .replace(/\*(.+?)\*/g, (_, t) => `<mark${/[gjpqyç]/.test(t) ? '' : ' class="sem-perna"'}>${t}</mark>`)
+    .replace(/\n/g, '<br>');
+}
+
+function rodape(ctx) {
+  const pagina = ctx.total > 1 ? `<span class="pagina">${ctx.i + 1}/${ctx.total}</span>` : '<span></span>';
+  return `<div class="rodape"><span class="marca">${ctx.simbolo}<span>${esc(ctx.rodape)}</span></span>${pagina}</div>`;
+}
+
+// Slides com foto não usam o rodapé comum: a marca já está no corpo.
+function slideFoto(s, ctx, variante) {
+  const pagina = ctx.total > 1 ? `<span class="pagina-foto">${ctx.i + 1}/${ctx.total}</span>` : '';
+  const botao = s.botao ? `<span class="botao">${esc(s.botao)}</span>` : '';
+  return {
+    classe: `foto ${ctx.formato}`,
+    semRodape: true,
+    html: `<div class="foto-img" style="background-image:url('${s.foto}');background-position:${esc(s.posicao || 'center')}"></div>
+      <div class="moldura ${variante}">
+        <div class="vidro"></div><div class="degrade"></div>
+        ${s.topo ? `<div class="topo">${fmt(s.topo)}</div>` : ''}${pagina}
+        <div class="base"><div class="logo">${ctx.logo}</div>${s.texto ? `<p>${fmt(s.texto)}</p>` : ''}${botao}</div>
+      </div>`,
+  };
+}
+
+const ICONE = {
+  pessoa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',
+  calendario: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>',
+  documento: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>',
+  dinheiro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="3"/><circle cx="12" cy="12" r="2.5"/></svg>',
+  servico: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg>',
+};
+// pago e vencido continuam valendo como apelidos de ok e alerta.
+const STATUS = { ok: 'ok', pago: 'ok', pendente: 'pendente', alerta: 'alerta', vencido: 'alerta', atrasado: 'alerta' };
+
+// Blocos da tela desenhada: cada item do array s.tela é um objeto com uma destas chaves.
+function blocoTela(b, ctx) {
+  if (b.titulo) return `<div class="titulo-tela">${esc(b.titulo)}</div>${b.sub ? `<div class="sub">${esc(b.sub)}</div>` : ''}`;
+  if (b.campo) return `<label class="campo${b.foco ? ' foco' : ''}"><span>${esc(b.campo)}</span><div>${esc(b.valor)}</div></label>`;
+  if (b.rotulo) return `<div class="rotulo-lista">${esc(b.rotulo)}</div>`;
+  if (b.cartao) {
+    const st = STATUS[b.status];
+    const tag = st ? `<span class="status-tag ${st}">${esc(b.etiqueta || ctx.textos.status?.[st] || st)}</span>` : '';
+    const valor = b.valor ? `<span class="valor">${esc(b.valor)}</span>` : '';
+    const acao = b.acao ? `<span class="acao">${esc(b.acao)}</span>` : '';
+    return `<div class="cartao-app${b.ativo ? ' ativo' : ''}"><span class="ico">${ICONE[b.icone || 'pessoa'] || ICONE.pessoa}</span><span class="txt"><b>${esc(b.cartao)}</b>${b.detalhe ? `<small>${esc(b.detalhe)}</small>` : ''}</span>${valor}${tag}${acao}</div>`;
+  }
+  if (b.metricas) return `<div class="metricas">${b.metricas.map(m => `<div><span>${esc(m[0])}</span><b>${esc(m[1])}</b></div>`).join('')}</div>`;
+  if (b.perfil) return `<div class="perfil"><span class="foto-perfil">${esc(b.perfil.split(' ').map(p => p[0]).slice(0, 2).join(''))}</span><b>${esc(b.perfil)}</b><small>${esc(b.detalhe || '')}</small></div>`;
+  if (b.assistente) return `<div class="msg assistente">${fmt(b.assistente)}</div>`;
+  if (b.voce) return `<div class="msg voce">${fmt(b.voce)}</div>`;
+  if (b.chips) return `<div class="chips">${b.chips.map(c => c.startsWith('+') ? `<span class="on">${esc(c.slice(1))}</span>` : `<span>${esc(c)}</span>`).join('')}</div>`;
+  if (b.entrada) return `<div class="entrada">${esc(b.entrada)}</div>`;
+  if (b.botao) return `<div class="botao-app${b.contorno ? ' contorno' : ''}">${esc(b.botao)}</div>`;
+  return '';
+}
+
+function telaApp(s, ctx) {
+  const status = '<div class="status"><span>9:41</span><span>●●● 100%</span></div>';
+  if (s.conversa) {
+    const w = s.conversa;
+    // Endereço com caminho (seusite.com/x) ganha cor de link.
+    const msg = esc(w.mensagem).replace(/\n/g, '<br>').replace(/((?:https?:\/\/)?[\w-]+(?:\.[\w-]+)+\/\S*)/g, '<span class="link">$1</span>');
+    return `<div class="tela-app" style="background:#EFE7DE">${status}<div class="chat">
+      <div class="barra-app"><span class="avatar">${ctx.simbolo}</span><b>${esc(w.contato)}</b></div>
+      <span class="data">${esc(w.data || 'Hoje')}</span>
+      <div class="bolha">${msg}<span class="hora">${esc(w.hora || '09:00')}</span></div></div></div>`;
+  }
+  return `<div class="tela-app">${status}<div class="barra-app"><span class="simb">${ctx.simbolo}</span><b>${esc(s.barra || '')}</b></div>
+    <div class="conteudo">${(s.tela || []).map(b => blocoTela(b, ctx)).join('')}</div></div>`;
+}
+
+const TIPOS = {
+  tela: (s, ctx) => ({
+    classe: `cor tela ${ctx.formato}`,
+    html: `<div class="topo-tela">${s.tema || s.selo ? `<div class="linha-tema">${s.tema ? `<span class="tema">${esc(s.tema)}</span>` : ''}${s.selo ? `<span class="selo">${esc(s.selo)}</span>` : ''}</div>` : ''}
+      <h2>${fmt(s.titulo)}</h2>${s.texto ? `<p>${fmt(s.texto)}</p>` : ''}</div>
+      <div class="celular">${telaApp(s, ctx)}</div>`,
+    semRodape: 'padrao',
+  }),
+  foto: (s, ctx) => slideFoto(s, ctx, ''),
+  'foto-vidro': (s, ctx) => slideFoto(s, ctx, 'cartao'),
+  capa: (s, ctx) => ({
+    classe: 'cor capa',
+    html: `<div class="simbolo-fundo">${ctx.simbolo}</div>
+      <div class="corpo">${s.tema ? `<span class="tema">${esc(s.tema)}</span>` : ''}<h1>${fmt(s.titulo)}</h1>
+      ${s.texto ? `<p class="texto">${fmt(s.texto)}</p>` : ''}</div>
+      ${ctx.total > 1 ? `<div class="arrasta">${esc(ctx.textos.arrasta || 'Arrasta pro lado')} ${SETA}</div>` : ''}`,
+  }),
+  texto: (s) => ({
+    classe: 'claro',
+    html: `<div class="corpo">${s.tema ? `<span class="tema">${esc(s.tema)}</span>` : ''}<h2>${fmt(s.titulo)}</h2>
+      ${s.texto ? `<p class="texto">${fmt(s.texto)}</p>` : ''}</div>`,
+  }),
+  lista: (s) => ({
+    classe: 'claro',
+    html: `<div class="corpo"><h2>${fmt(s.titulo)}</h2>
+      <ol class="itens">${(s.itens || []).map((t, n) => `<li><span class="n">${n + 1}</span><span>${fmt(t)}</span></li>`).join('')}</ol></div>`,
+  }),
+  mensagem: (s, ctx) => ({
+    classe: 'claro',
+    html: `<div class="corpo">${s.titulo ? `<h2>${fmt(s.titulo)}</h2>` : ''}
+      <div class="balao"><span class="rotulo">${ctx.simbolo}${esc(s.rotulo || ctx.textos.rotuloMensagem || 'Mensagem pronta para copiar')}</span><div>${fmt(s.mensagem)}</div></div>
+      ${s.nota ? `<p class="nota">${fmt(s.nota)}</p>` : ''}</div>`,
+  }),
+  frase: (s, ctx) => ({
+    classe: 'escuro',
+    html: `<div class="simbolo-fundo">${ctx.simbolo}</div>
+      <div class="corpo"><p class="frase">${fmt(s.frase)}</p>${s.assinatura ? `<p class="assinatura">${esc(s.assinatura)}</p>` : ''}</div>`,
+  }),
+  cta: (s, ctx) => {
+    const tagline = s.tagline ?? ctx.textos.tagline;
+    return {
+      classe: 'cor fim',
+      html: `<div class="simbolo-fundo">${ctx.simbolo}</div>
+        <div class="corpo"><div class="logo">${ctx.logo}</div><h2>${fmt(s.titulo)}</h2>
+        ${s.texto ? `<p class="texto">${fmt(s.texto)}</p>` : ''}
+        <span class="botao">${esc(s.botao || ctx.textos.botao || 'Comece agora')}</span>
+        ${tagline ? `<p class="tagline">${esc(tagline)}</p>` : ''}</div>`,
+    };
+  },
+};
+
+window.montar = async function (post, marca) {
+  const { simbolo, logo } = await window.aplicarMarca(marca);
+  const textos = marca.textos || {};
+  document.body.classList.toggle('story', post.formato === 'story');
+  document.body.className = document.body.className.replace(/\bfundo-\S+/g, '').trim();
+  document.body.classList.add(`fundo-${post.fundo || 'brilho'}`);
+  const root = document.getElementById('slides');
+  root.innerHTML = '';
+  const total = post.slides.length;
+  post.slides.forEach((s, i) => {
+    const tipo = TIPOS[s.tipo];
+    if (!tipo) throw new Error(`Tipo de slide desconhecido: ${s.tipo} (use ${Object.keys(TIPOS).join(', ')})`);
+    const formato = post.formato === 'story' ? 'story' : 'feed';
+    const ctx = { simbolo, logo, total, i, formato, textos, rodape: post.rodape || marca.rodape || marca.nome || '' };
+    const { classe, html, semRodape } = tipo(s, ctx);
+    const el = document.createElement('section');
+    el.className = `slide ${classe}`.trim();
+    // semRodape 'padrao' (tela): mantém o brilho do fundo, tira só o rodapé.
+    const camada = semRodape === true ? '' : `<div class="padrao" aria-hidden="true">${simbolo}</div>`;
+    el.innerHTML = camada + html + (semRodape ? '' : rodape(ctx));
+    root.appendChild(el);
+  });
+  await document.fonts.ready;
+  // Espera as fotos de fundo carregarem antes da captura.
+  await Promise.all(post.slides.filter(s => s.foto).map(s => {
+    const img = new Image();
+    img.src = s.foto;
+    return img.decode();
+  }));
+  return total;
+};
+</script>
+</body>
+</html>

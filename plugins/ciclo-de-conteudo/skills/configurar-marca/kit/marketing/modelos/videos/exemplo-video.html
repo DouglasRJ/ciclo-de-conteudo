@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Vídeo de exemplo: Teste de 3 segundos</title>
+<script src="../assets/marca.js"></script>
+<style>
+/* Cores e fonte vêm do marca.json (assets/marca.js troca estas variáveis). */
+:root {
+  --primaria: #4F46E5; --secundaria: #22D3EE; --escura: #312E81; --fundo-escuro: #0B0B12;
+  --claro: #F5F5F7; --branco: #FFFFFF; --texto: #2B2B2B; --apagado: #6B6B6B;
+  --ok: #08874A; --alerta: #B26A00; --erro: #E20404; --fonte: "Poppins"; --m: 110px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #161616; }
+body { font-family: var(--fonte), system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
+#palco { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--branco); transform-origin: 0 0; }
+.cena { position: absolute; inset: 0; overflow: hidden; }
+.cena.cor { background: var(--primaria); color: var(--branco); }
+.cena.escuro { background: var(--fundo-escuro); color: var(--branco); }
+.cena.papel { background: #FBF8F4; color: var(--fundo-escuro); }
+#c5 { background: none; color: var(--branco); }
+#branco { position: absolute; inset: 0; background: var(--branco); }
+
+.brilho { position: absolute; inset: 0; pointer-events: none; }
+.cor .brilho { background:
+  radial-gradient(circle at 105% -5%, color-mix(in srgb, var(--secundaria) 45%, transparent) 0%, color-mix(in srgb, var(--secundaria) 14%, transparent) 30%, transparent 55%),
+  radial-gradient(circle at -10% 108%, color-mix(in srgb, var(--escura) 45%, transparent) 0%, color-mix(in srgb, var(--escura) 14%, transparent) 32%, transparent 58%); }
+.escuro .brilho { background:
+  radial-gradient(circle at 105% -5%, color-mix(in srgb, var(--primaria) 24%, transparent) 0%, color-mix(in srgb, var(--primaria) 7%, transparent) 30%, transparent 55%),
+  radial-gradient(circle at -10% 108%, color-mix(in srgb, var(--escura) 22%, transparent) 0%, color-mix(in srgb, var(--escura) 6%, transparent) 30%, transparent 55%); }
+
+.corpo { position: absolute; left: var(--m); right: var(--m); top: var(--m); bottom: 200px; display: flex; flex-direction: column; justify-content: center; gap: 44px; }
+.rodape { position: absolute; left: var(--m); bottom: 84px; display: flex; align-items: center; gap: 14px; font-size: 26px; color: rgba(255,255,255,.85); }
+.rodape svg { width: 30px; height: auto; color: var(--branco); }
+.papel .rodape { color: var(--apagado); }
+.papel .rodape svg, .escuro .rodape svg { color: var(--primaria); }
+
+h1, h2 { font-weight: 700; letter-spacing: -0.02em; text-wrap: balance; }
+h1 { font-size: 118px; line-height: 1.14; }
+h2 { font-size: 78px; line-height: 1.1; }
+p.texto { font-size: 46px; line-height: 1.45; color: var(--texto); max-width: 28ch; text-wrap: pretty; }
+b { font-weight: 700; }
+
+/* Palavra: a máscara (.w) recorta e o miolo (.wi) sobe de dentro dela. */
+.w { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 .03em .14em; margin: 0 -.03em -.14em; }
+.wi { display: inline-block; }
+.solto .w { overflow: visible; }
+/* Destaque *palavra*: fundo branco em paralelogramo que corre da esquerda. */
+.w.m { position: relative; overflow: visible; line-height: 1.04; padding: .07em .3em .07em .32em; margin: 0 .04em; }
+.mbg { position: absolute; inset: 0; background: var(--branco); clip-path: polygon(0 0, calc(100% - .17em) 0, 100% 100%, .17em 100%); transform-origin: 0 50%; }
+.mclip { position: relative; display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; margin-bottom: -.08em; }
+/* Marca-texto do **trecho** no papel: desenha da esquerda pra direita, atravessando a quebra de linha. */
+.papel .b { background: linear-gradient(color-mix(in srgb, var(--primaria) 26%, transparent), color-mix(in srgb, var(--primaria) 26%, transparent)) no-repeat 0 88% / 0% .42em; }
+
+.tema-w { align-self: flex-start; }
+.tema { display: inline-block; font-size: 42px; font-weight: 700; letter-spacing: .02em; padding: 12px 38px; background: var(--branco); color: var(--primaria); clip-path: polygon(0 0, calc(100% - .25em) 0, 100% 100%, .25em 100%); }
+.papel .tema { background: var(--primaria); color: var(--branco); }
+
+/* Símbolo em pedaços: cada filho do SVG (path, círculo, grupo...) anima sozinho. */
+svg .peca { transform-box: fill-box; transform-origin: 0 50%; }
+.simbolo-fundo { position: absolute; width: 860px; right: -230px; bottom: -150px; color: var(--branco); opacity: .1; overflow: visible; }
+
+/* Cena 2: contagem */
+.contagem { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 70px; padding-bottom: 80px; }
+.digitos { position: relative; width: 420px; height: 560px; overflow: hidden; font-size: 480px; font-weight: 700; line-height: 560px; letter-spacing: -0.04em; }
+.digitos span { position: absolute; inset: 0; text-align: center; }
+.simbolo-contagem { width: 220px; overflow: visible; color: var(--branco); }
+
+/* Cena 3: caderno */
+.pautas { position: absolute; inset: 0; }
+.pautas i { position: absolute; left: 0; right: 0; height: 2px; background: rgba(40,60,90,.09); transform-origin: 0 50%; }
+.pautas .margem { position: absolute; left: 62px; width: 3px; top: 0; bottom: 0; background: color-mix(in srgb, var(--primaria) 45%, transparent); transform-origin: 50% 0; }
+
+/* Cena 4: tela do produto */
+.topo-tela { position: absolute; left: var(--m); right: var(--m); top: var(--m); display: flex; flex-direction: column; gap: 26px; }
+.topo-tela p { font-size: 40px; line-height: 1.4; color: rgba(255,255,255,.92); text-wrap: pretty; }
+.topo-tela p b { color: var(--branco); }
+.celular { position: absolute; left: 140px; bottom: -60px; width: 800px; height: 1240px; padding: 20px; border-radius: 96px; background: #141414; box-shadow: 0 40px 90px color-mix(in srgb, var(--escura) 45%, transparent); transform-origin: 50% 0; }
+.tela-app { width: 100%; height: 100%; border-radius: 78px; overflow: hidden; background: #F7F7F8; display: flex; flex-direction: column; font-size: 30px; color: #1F1F1F; }
+.status { display: flex; justify-content: space-between; padding: 30px 60px 10px; font-size: 26px; font-weight: 600; }
+.barra-app { display: flex; align-items: center; gap: 18px; padding: 18px 44px 22px; background: var(--branco); border-bottom: 1px solid #ECECEC; }
+.barra-app .simb { width: 34px; color: var(--primaria); display: flex; }
+.barra-app .simb svg { width: 100%; height: auto; }
+.barra-app b { font-size: 34px; }
+.conteudo { flex: 1; padding: 30px 40px; display: flex; flex-direction: column; gap: 22px; }
+.metricas { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.metricas div { background: var(--branco); border: 1.5px solid #EAEAEA; border-radius: 28px; padding: 24px 26px; display: flex; flex-direction: column; gap: 6px; }
+.metricas span { font-size: 22px; color: #8A8A8A; }
+.metricas b { font-size: 38px; font-variant-numeric: tabular-nums; }
+.rotulo-lista { font-size: 24px; font-weight: 600; color: #8A8A8A; margin-top: 6px; }
+.cartao-app { background: var(--branco); border: 1.5px solid #EAEAEA; border-radius: 28px; padding: 26px 28px; display: flex; align-items: center; gap: 22px; }
+.cartao-app .ico { width: 64px; height: 64px; border-radius: 20px; background: color-mix(in srgb, var(--primaria) 10%, transparent); display: grid; place-items: center; flex: none; }
+.cartao-app .ico svg { width: 32px; color: var(--primaria); }
+.cartao-app .txt { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.cartao-app .txt b { font-size: 30px; font-weight: 600; }
+.cartao-app .txt small { font-size: 24px; color: #8A8A8A; }
+.status-tag { font-size: 22px; font-weight: 600; padding: 6px 16px; border-radius: 999px; border: 1.5px solid; white-space: nowrap; }
+.status-tag.ok { color: var(--ok); background: color-mix(in srgb, var(--ok) 9%, white); border-color: color-mix(in srgb, var(--ok) 28%, white); }
+.status-tag.pendente { color: var(--alerta); background: color-mix(in srgb, var(--alerta) 9%, white); border-color: color-mix(in srgb, var(--alerta) 30%, white); }
+.status-tag.alerta { color: var(--erro); background: color-mix(in srgb, var(--erro) 8%, white); border-color: color-mix(in srgb, var(--erro) 25%, white); }
+
+/* Cena 5: chamada */
+.logo-v { position: relative; width: 560px; }
+.logo-v svg { display: block; width: 100%; height: auto; overflow: visible; color: var(--branco); }
+.botao-w { align-self: flex-start; }
+.botao { display: inline-flex; background: var(--branco); color: var(--primaria); font-weight: 700; font-size: 56px; padding: 16px 40px; border-radius: .2em; }
+.tagline { font-size: 36px; font-weight: 600; color: var(--branco); }
+
+/* Prévia no navegador: ?play */
+#controle { display: none; position: fixed; left: 0; right: 0; bottom: 0; padding: 12px 16px; gap: 12px; align-items: center; background: #000c; color: #fff; font: 14px system-ui; }
+.play #controle { display: flex; }
+#controle input { flex: 1; }
+#controle button { font: inherit; padding: 6px 14px; }
+</style>
+</head>
+<body>
+<div id="palco">
+  <!-- De baixo para cima: cada cena entra por cima da anterior. -->
+  <section class="cena escuro" id="c2">
+    <div class="brilho"></div>
+    <div class="contagem">
+      <div class="digitos"><span>3</span><span>2</span><span>1</span></div>
+      <svg class="simbolo-contagem" data-simbolo></svg>
+    </div>
+    <div class="rodape" data-rodape></div>
+  </section>
+
+  <section class="cena papel" id="c3">
+    <div class="pautas"></div>
+    <div class="corpo" id="c3-corpo">
+      <div class="tema-w"><span class="tema" id="c3-tema"></span></div>
+      <h2 id="c3-titulo"></h2>
+      <p class="texto solto" id="c3-texto"></p>
+    </div>
+    <div class="rodape" data-rodape></div>
+  </section>
+
+  <section class="cena cor" id="c4">
+    <div class="brilho"></div>
+    <div class="topo-tela">
+      <div class="tema-w"><span class="tema" id="c4-tema"></span></div>
+      <h2 id="c4-titulo"></h2>
+      <p class="solto" id="c4-texto"></p>
+    </div>
+    <div class="celular" id="celular"></div>
+  </section>
+
+  <section class="cena" id="c5">
+    <svg class="simbolo-fundo" id="c5-fundo" data-simbolo style="width:620px;right:-200px;bottom:-260px"></svg>
+    <div class="corpo">
+      <div class="logo-v" id="logo"></div>
+      <h2 id="c5-titulo"></h2>
+      <div class="botao-w"><span class="botao" id="c5-botao"></span></div>
+      <p class="tagline" id="c5-tagline"></p>
+    </div>
+    <div class="rodape" data-rodape></div>
+  </section>
+
+  <div id="branco"></div>
+
+  <section class="cena cor" id="c1">
+    <div class="brilho"></div>
+    <svg class="simbolo-fundo" id="c1-fundo" data-simbolo></svg>
+    <div class="corpo" id="c1-corpo">
+      <div class="tema-w"><span class="tema" id="c1-tema"></span></div>
+      <h1 id="c1-titulo"></h1>
+    </div>
+    <div class="rodape" data-rodape></div>
+  </section>
+</div>
+<div id="controle"><button id="tocar">Pausar</button><input id="barra" type="range" min="0" step="1"><span id="relogio"></span></div>
+
+<script>
+// Coreografia de exemplo "Teste de 3 segundos" (story 1080x1920). Copie para videos/<slug>.html e adapte.
+// Um relógio t (ms) anda de 0 ao fim e cada elemento aplica a própria curva sobre ele. quadro(t) é puro:
+// o mesmo t dá sempre a mesma imagem, então o video.mjs captura quadro a quadro sem pular nada.
+// O relógio é linear; nenhum movimento na tela é.
+
+// ─── Curvas ─────────────────────────────────────────────────────────────
+function bezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
+  const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const sx = (u) => ((ax * u + bx) * u + cx) * u;
+  const sy = (u) => ((ay * u + by) * u + cy) * u;
+  return (x) => {
+    if (x <= 0) return 0;
+    if (x >= 1) return 1;
+    let lo = 0, hi = 1, u = x;
+    for (let i = 0; i < 40; i++) { if (sx(u) < x) lo = u; else hi = u; u = (lo + hi) / 2; }
+    return sy(u);
+  };
+}
+const EASE_OUT = bezier(0.22, 1, 0.36, 1);    // entrar
+const EASE_IN = bezier(0.55, 0, 0.9, 0.3);    // sair
+const EASE_IN_OUT = bezier(0.65, 0, 0.35, 1);
+const EASE_FILL = bezier(0.8, 0, 0.2, 1);     // cobrir a tela
+const EASE_SPLIT = bezier(0.7, 0, 0.3, 1);    // abrir
+const EASE_POP = bezier(0.34, 1.56, 0.64, 1); // etiqueta e botão
+
+const prog = (t, start, dur) => Math.min(1, Math.max(0, (t - start) / dur));
+const lerp = (a, b, k) => a + (b - a) * k;
+/** Mola amortecida analítica: 0 → 1 com passada. Para objeto que assenta (celular). */
+function mola(t, start, rigidez, amortecimento) {
+  const x = (t - start) / 1000;
+  if (x <= 0) return 0;
+  const w0 = Math.sqrt(rigidez), zeta = amortecimento / (2 * w0), wd = w0 * Math.sqrt(1 - zeta * zeta);
+  const v = 1 - Math.exp(-zeta * w0 * x) * (Math.cos(wd * x) + ((zeta * w0) / wd) * Math.sin(wd * x));
+  return x > 2.5 ? 1 : v;
+}
+
+// ─── Linha do tempo (ms) ────────────────────────────────────────────────
+// A trilha (exemplo-video.trilha.mjs) lê este mesmo T: mudou um tempo aqui, o som acompanha.
+const W = 1080, H = 1920;
+const T = {
+  // 1. Capa: a bolinha nasce no branco e se abre em círculo até cobrir a tela.
+  ponto: { start: 0, dur: 300 }, abre: { start: 360, dur: 560 },
+  c1Tema: 430, c1Titulo: 540, c1Marca: 1080, c1Sai: 2120,
+  // ...e se parte em duas metades de borda curva (a de baixo primeiro).
+  corteBaixo: { start: 2520, dur: 500 }, corteCima: { start: 2580, dur: 500 },
+  // 2. Contagem a cada 750 ms (1 tempo e meio a 120 bpm); a batida entra junto com o papel.
+  simboloEntra: 2690, numeros: [2750, 3500, 4250], batida: 5000,
+  // 3. O papel do caderno sobe com a borda curva.
+  papel: { start: 4700, dur: 620 }, c3Tema: 5050, c3Titulo: 5140, c3Texto: 5880, marcaTexto: { start: 6800, dur: 760 },
+  // 4. Cortina em paralelogramo (a forma do destaque) traz a tela do produto.
+  cortina: { start: 9000, dur: 640 }, c4Tema: 9380, c4Titulo: 9450, c4Texto: 9850,
+  celular: 9480, metricas: 10050, conta: { start: 10150, dur: 1100 }, cartoes: 10420, c4Sai: 14000,
+  // 5. Chamada: o logo se revela e o botão aparece.
+  logo: 14500, c5Titulo: 14970, botao: 15500, tagline: 15900,
+  capa: 1900, // instante da capa.png
+  fim: 18000,
+};
+
+// ─── Montagem ───────────────────────────────────────────────────────────
+const $ = (s) => document.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+function esc(s) { return String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+/** Quebra o texto em palavras animáveis. *x* vira destaque e **x** vira negrito (como no modelo.html). */
+function palavras(el, texto) {
+  const partes = [];
+  const re = /\*\*(.+?)\*\*|\*(.+?)\*/g;
+  let i = 0, m;
+  texto = texto || '';
+  while ((m = re.exec(texto))) {
+    if (m.index > i) partes.push(['n', texto.slice(i, m.index)]);
+    partes.push(m[1] != null ? ['b', m[1]] : ['m', m[2]]);
+    i = re.lastIndex;
+  }
+  if (i < texto.length) partes.push(['n', texto.slice(i)]);
+  const ws = (s) => s.split(/(\s+)/).map((x) => (/^\s+$/.test(x) ? (x.includes('\n') ? '<br>' : ' ') : x ? `<span class="w"><span class="wi">${esc(x)}</span></span>` : '')).join('');
+  el.innerHTML = partes.map(([tipo, s]) => {
+    if (tipo === 'b') return `<b class="b">${ws(s)}</b>`;
+    if (tipo === 'm') return `<span class="w m"><span class="mbg"></span><span class="mclip"><span class="wi">${esc(s)}</span></span></span>`;
+    return ws(s);
+  }).join('');
+  return { ws: $$('.wi', el), marcas: $$('.m', el), negritos: $$('.b', el) };
+}
+
+/** SVG da marca em pedaços: cada filho desenhável vira um .peca que anima sozinho. */
+function emPedacos(svgTexto) {
+  const svg = new DOMParser().parseFromString(svgTexto, 'image/svg+xml').documentElement;
+  const filhos = [...svg.children].filter((e) => !['title', 'desc', 'defs', 'style'].includes(e.tagName));
+  filhos.forEach((e) => e.classList.add('peca'));
+  const defs = [...svg.children].filter((e) => e.tagName === 'defs').map((e) => e.outerHTML).join('');
+  return { viewBox: svg.getAttribute('viewBox'), html: defs + filhos.map((e) => e.outerHTML).join('') };
+}
+
+const ICONE = {
+  pessoa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',
+  calendario: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>',
+  documento: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>',
+  dinheiro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="3"/><circle cx="12" cy="12" r="2.5"/></svg>',
+};
+const STATUS = { ok: 'ok', pago: 'ok', pendente: 'pendente', alerta: 'alerta', vencido: 'alerta', atrasado: 'alerta' };
+
+/** Contador: "R$ 1.860,00", "5" ou "3,5 h" contam de 0 até o valor, mantendo prefixo, sufixo e casas decimais. */
+function contador(modelo) {
+  const m = String(modelo).match(/^(\D*?)(\d[\d.]*(?:,\d+)?)(\D*)$/);
+  if (!m) return () => modelo;
+  const [, pre, num, suf] = m;
+  const casas = (num.split(',')[1] || '').length;
+  const valor = Number(num.replace(/\./g, '').replace(',', '.'));
+  return (k) => pre + (valor * k).toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas }) + suf;
+}
+
+let E = null; // elementos já montados
+
+window.preparar = async function (post, marca) {
+  const { simbolo, logo } = await window.aplicarMarca(marca, '../');
+  const textos = marca.textos || {};
+  const [capa, , dica, tela, cta] = post.slides;
+
+  const s = emPedacos(simbolo);
+  $$('[data-rodape]').forEach((el) => { el.innerHTML = `${simbolo}<span>${esc(post.rodape || marca.rodape || marca.nome || '')}</span>`; });
+  $$('svg[data-simbolo]').forEach((el) => { el.setAttribute('viewBox', s.viewBox); el.setAttribute('fill', 'currentColor'); el.innerHTML = s.html; });
+  $('#logo').innerHTML = logo;
+
+  $('#c1-tema').textContent = capa.tema || '';
+  $('#c3-tema').textContent = dica.tema || '';
+  $('#c4-tema').textContent = tela.tema || '';
+  $('#c5-botao').textContent = cta.botao || textos.botao || 'Comece agora';
+  $('#c5-tagline').textContent = cta.tagline ?? textos.tagline ?? '';
+
+  // Pautas do caderno a cada 68 px, como o fundo "caderno" dos modelos.
+  $('.pautas').innerHTML = '<span class="margem"></span>' + Array.from({ length: 28 }, (_, i) => `<i style="top:${66 + i * 68}px"></i>`).join('');
+
+  // Tela do produto com os rótulos do JSON.
+  const blocos = tela.tela.map((b) => {
+    if (b.metricas) return `<div class="metricas">${b.metricas.map((m) => `<div><span>${esc(m[0])}</span><b data-modelo="${esc(m[1])}">${esc(m[1])}</b></div>`).join('')}</div>`;
+    if (b.rotulo) return `<div class="rotulo-lista">${esc(b.rotulo)}</div>`;
+    if (b.cartao) {
+      const st = STATUS[b.status];
+      const tag = st ? `<span class="status-tag ${st}">${esc(b.etiqueta || textos.status?.[st] || st)}</span>` : '';
+      return `<div class="cartao-app"><span class="ico">${ICONE[b.icone] || ICONE.pessoa}</span><span class="txt"><b>${esc(b.cartao)}</b><small>${esc(b.detalhe)}</small></span>${tag}</div>`;
+    }
+    return '';
+  }).join('');
+  $('#celular').innerHTML = `<div class="tela-app"><div class="status"><span>9:41</span><span>●●● 100%</span></div>
+    <div class="barra-app"><span class="simb">${simbolo}</span><b>${esc(tela.barra)}</b></div><div class="conteudo">${blocos}</div></div>`;
+
+  E = {
+    c1: $('#c1'), c2: $('#c2'), c3: $('#c3'), c4: $('#c4'), c5: $('#c5'), branco: $('#branco'),
+    c1Corpo: $('#c1-corpo'), c1Tema: $('#c1-tema'), c1Titulo: palavras($('#c1-titulo'), capa.titulo), c1Fundo: $$('#c1-fundo .peca'),
+    digitos: $$('.digitos span'), simboloContagem: $('.simbolo-contagem'), pecasContagem: $$('.simbolo-contagem .peca'),
+    pautas: $$('.pautas i'), margem: $('.pautas .margem'), c3Corpo: $('#c3-corpo'),
+    c3Tema: $('#c3-tema'), c3Titulo: palavras($('#c3-titulo'), dica.titulo), c3Texto: palavras($('#c3-texto'), dica.texto),
+    c4Tema: $('#c4-tema'), c4Titulo: palavras($('#c4-titulo'), tela.titulo), c4Texto: palavras($('#c4-texto'), tela.texto),
+    celular: $('#celular'), metricas: $$('.metricas div'), valores: $$('.metricas b').map((el) => ({ el, conta: contador(el.dataset.modelo) })),
+    rotulo: $('.rotulo-lista'), cartoes: $$('.cartao-app'), tags: $$('.status-tag'),
+    logo: $('#logo'), c5Fundo: $$('#c5-fundo .peca'),
+    c5Titulo: palavras($('#c5-titulo'), cta.titulo),
+    botao: $('#c5-botao'), tagline: $('#c5-tagline'),
+  };
+  await document.fonts.ready;
+  return T.fim;
+};
+// O video.mjs passa a linha do tempo para a trilha: som e imagem batem pelo mesmo relógio.
+window.T = T;
+
+// ─── Gestos reutilizáveis ───────────────────────────────────────────────
+
+/** Palavras sobem de dentro da máscara (ou aparecem soltas) e, se houver saída, sobem para fora. */
+function revela(ws, t, start, { passo = 50, dur = 640, solto = false, saida = null } = {}) {
+  ws.forEach((el, i) => {
+    const k = EASE_OUT(prog(t, start + i * passo, dur));
+    let y = solto ? (1 - k) * 28 : (1 - k) * 112;
+    let op = solto ? k : 1;
+    if (saida) {
+      const s = EASE_IN(prog(t, saida + i * 18, 320));
+      y -= solto ? s * 40 : s * 112;
+      if (solto) op *= 1 - s;
+    }
+    el.style.transform = `translateY(${y.toFixed(2)}${solto ? 'px' : '%'})`;
+    el.style.opacity = op;
+  });
+}
+
+/** Etiqueta em paralelogramo: abre da esquerda e, na saída, fecha pela esquerda. */
+function etiqueta(el, t, start, saida = null) {
+  const k = EASE_OUT(prog(t, start, 520));
+  const s = saida ? EASE_IN(prog(t, saida, 300)) : 0;
+  el.style.clipPath = `polygon(${s * 100}% 0, calc(${k * 100}% - .25em) 0, ${k * 100}% 100%, calc(${s * 100}% + .25em) 100%)`;
+  el.style.transform = `translateX(${((1 - k) * -24).toFixed(2)}px)`;
+  // Fechada, a forma vira uma lasca na borda: some de vez.
+  el.style.visibility = k < 0.02 || s > 0.96 ? 'hidden' : 'visible';
+}
+
+/** Destaque *palavra*: o fundo branco corre e o texto passa de branco à cor da marca. */
+function destaque(marcas, t, start, saida = null) {
+  marcas.forEach((el) => {
+    const k = EASE_OUT(prog(t, start, 520));
+    const s = saida ? EASE_IN(prog(t, saida, 300)) : 0;
+    const bg = el.querySelector('.mbg');
+    // Entra da esquerda; na saída, recolhe para a direita.
+    bg.style.transformOrigin = s > 0 ? '100% 50%' : '0 50%';
+    bg.style.transform = `scaleX(${s > 0 ? 1 - s : k})`;
+    const c = Math.min(1, Math.max(0, (k - 0.35) / 0.4));
+    el.style.color = `color-mix(in srgb, var(--primaria) ${(c * 100).toFixed(1)}%, white)`;
+  });
+}
+
+/** Pedaços do símbolo: entram correndo da esquerda, um depois do outro. */
+function pecasEntram(pecas, t, start, passo = 80, dur = 520) {
+  pecas.forEach((p, i) => { p.style.transform = `scaleX(${EASE_OUT(prog(t, start + i * passo, dur))})`; });
+}
+
+// ─── Quadro ─────────────────────────────────────────────────────────────
+
+window.quadro = function (t) {
+  // 1. Capa
+  const ponto = EASE_POP(prog(t, T.ponto.start, T.ponto.dur));
+  const abre = EASE_FILL(prog(t, T.abre.start, T.abre.dur));
+  const raio = t < T.abre.start ? 46 * ponto : lerp(46, Math.hypot(W, H) / 2 + 20, abre);
+  // Antes de abrir, um respiro: a bolinha encolhe um pouco (antecipação).
+  const respiro = 1 - 0.14 * Math.sin(Math.PI * prog(t, 300, 120));
+  const corteB = EASE_SPLIT(prog(t, T.corteBaixo.start, T.corteBaixo.dur));
+  const corteC = EASE_SPLIT(prog(t, T.corteCima.start, T.corteCima.dur));
+  if (abre < 1) {
+    E.c1.style.clipPath = `circle(${(raio * respiro).toFixed(2)}px at 50% 50%)`;
+  } else if (t < T.corteBaixo.start) {
+    E.c1.style.clipPath = 'none';
+  } else {
+    const meio = H / 2, arco = 120, folga = 30;
+    const dC = -corteC * (meio + arco + folga), dB = corteB * (meio + arco + folga);
+    E.c1.style.clipPath = `path('M${-folga} ${-folga + dC}H${W + folga}V${meio + dC}Q${W / 2} ${meio + arco + dC} ${-folga} ${meio + dC}Z`
+      + `M${-folga} ${meio + dB}Q${W / 2} ${meio + arco + dB} ${W + folga} ${meio + dB}V${H + folga + dB}H${-folga}Z')`;
+  }
+  E.c1.style.visibility = corteC >= 1 ? 'hidden' : 'visible';
+  E.branco.style.visibility = abre >= 1 ? 'hidden' : 'visible';
+  etiqueta(E.c1Tema, t, T.c1Tema, T.c1Sai);
+  revela(E.c1Titulo.ws, t, T.c1Titulo, { passo: 55, saida: T.c1Sai + 40 });
+  destaque(E.c1Titulo.marcas, t, T.c1Marca, T.c1Sai + 60);
+  E.c1Corpo.style.transform = `translateY(${lerp(0, -18, EASE_IN_OUT(prog(t, 700, 1700))).toFixed(2)}px)`;
+  E.c1Fundo.forEach((p, i) => {
+    const k = EASE_OUT(prog(t, 620 + i * 110, 900));
+    p.style.transform = `translateX(${((1 - k) * 700).toFixed(1)}px)`;
+  });
+
+  // 2. Contagem: o símbolo entra em pedaços e, no "1", ganha a cor da marca junto com o número.
+  pecasEntram(E.pecasContagem, t, T.simboloEntra, 90, 560);
+  E.digitos.forEach((el, i) => {
+    const k = EASE_OUT(prog(t, T.numeros[i], 520));
+    const s = i < 2 ? EASE_IN(prog(t, T.numeros[i + 1] - 120, 300)) : 0;
+    el.style.transform = `translateY(${((1 - k) * 100 - s * 100).toFixed(2)}%)`;
+    el.style.color = i === 2 ? 'var(--primaria)' : '';
+  });
+  {
+    const c = EASE_IN_OUT(prog(t, T.numeros[2], 400));
+    E.simboloContagem.style.color = `color-mix(in srgb, var(--primaria) ${(c * 100).toFixed(1)}%, white)`;
+    E.simboloContagem.style.transform = `scale(${lerp(1, 1.08, EASE_IN_OUT(prog(t, T.numeros[2], 900)))})`;
+  }
+
+  // 3. Papel
+  const papel = EASE_FILL(prog(t, T.papel.start, T.papel.dur));
+  if (papel <= 0) E.c3.style.visibility = 'hidden';
+  else {
+    E.c3.style.visibility = 'visible';
+    const arco = 160, y = lerp(H + arco + 10, -arco - 10, papel);
+    E.c3.style.clipPath = papel >= 1 ? 'none' : `path('M-10 ${y}Q${W / 2} ${y - arco} ${W + 10} ${y}V${H + 10}H-10Z')`;
+  }
+  E.c3Corpo.style.transform = `translateY(${((1 - EASE_OUT(prog(t, T.papel.start + 120, 900))) * 160).toFixed(2)}px)`;
+  E.pautas.forEach((el, i) => { el.style.transform = `scaleX(${EASE_OUT(prog(t, T.papel.start + 200 + i * 22, 700))})`; });
+  E.margem.style.transform = `scaleY(${EASE_OUT(prog(t, T.papel.start + 260, 900))})`;
+  etiqueta(E.c3Tema, t, T.c3Tema);
+  revela(E.c3Titulo.ws, t, T.c3Titulo, { passo: 60 });
+  revela(E.c3Texto.ws, t, T.c3Texto, { passo: 34, dur: 520, solto: true });
+  E.c3Texto.negritos.forEach((el) => {
+    el.style.backgroundSize = `${(EASE_IN_OUT(prog(t, T.marcaTexto.start, T.marcaTexto.dur)) * 100).toFixed(2)}% .42em`;
+  });
+  // Enquanto a cortina passa, o papel recua um pouco para a esquerda.
+  E.c3.style.transform = `translateX(${(-90 * EASE_FILL(prog(t, T.cortina.start, T.cortina.dur))).toFixed(2)}px)`;
+
+  // 4. Tela do produto
+  const cortina = EASE_FILL(prog(t, T.cortina.start, T.cortina.dur));
+  if (cortina <= 0) E.c4.style.visibility = 'hidden';
+  else {
+    E.c4.style.visibility = 'visible';
+    const inclina = 420, x = lerp(W + 20, -inclina - 20, cortina);
+    E.c4.style.clipPath = cortina >= 1 ? 'none' : `polygon(${x}px 0, ${W + 20}px 0, ${W + 20}px ${H}px, ${x + inclina}px ${H}px)`;
+  }
+  etiqueta(E.c4Tema, t, T.c4Tema, T.c4Sai);
+  revela(E.c4Titulo.ws, t, T.c4Titulo, { passo: 55, saida: T.c4Sai + 30 });
+  revela(E.c4Texto.ws, t, T.c4Texto, { passo: 32, dur: 520, solto: true, saida: T.c4Sai + 80 });
+  {
+    const k = mola(t, T.celular, 140, 19);
+    const sai = EASE_IN(prog(t, T.c4Sai + 60, 520));
+    const perto = EASE_IN_OUT(prog(t, 11200, 2700));
+    const y = lerp(1300, 0, k) - 26 * perto + sai * 1400;
+    E.celular.style.transform = `translateY(${y.toFixed(2)}px) rotate(${lerp(7, 0, k).toFixed(3)}deg) scale(${(1 + 0.025 * perto).toFixed(4)})`;
+  }
+  E.metricas.forEach((el, i) => {
+    const k = EASE_OUT(prog(t, T.metricas + i * 90, 560));
+    el.style.opacity = k;
+    el.style.transform = `translateY(${((1 - k) * 30).toFixed(2)}px) scale(${lerp(0.94, 1, k).toFixed(4)})`;
+  });
+  E.valores.forEach(({ el, conta }, i) => { el.textContent = conta(EASE_OUT(prog(t, T.conta.start + i * 90, T.conta.dur))); });
+  if (E.rotulo) E.rotulo.style.opacity = EASE_OUT(prog(t, T.cartoes - 120, 500));
+  E.cartoes.forEach((el, i) => {
+    const k = EASE_OUT(prog(t, T.cartoes + i * 120, 620));
+    el.style.opacity = k;
+    el.style.transform = `translateY(${((1 - k) * 46).toFixed(2)}px)`;
+  });
+  E.tags.forEach((el, i) => {
+    const k = EASE_POP(prog(t, T.cartoes + 260 + i * 120, 460));
+    el.style.opacity = Math.min(1, k * 1.5);
+    el.style.transform = `scale(${lerp(0.5, 1, k).toFixed(4)})`;
+  });
+
+  // 5. Chamada
+  E.c5.style.visibility = t >= T.logo - 100 ? 'visible' : 'hidden';
+  {
+    // O logo se revela da esquerda para a direita, como uma etiqueta abrindo.
+    const k = EASE_OUT(prog(t, T.logo, 900));
+    E.logo.style.clipPath = `inset(-10% ${((1 - k) * 102).toFixed(2)}% -10% -2%)`;
+    E.logo.style.transform = `translateX(${((1 - k) * -30).toFixed(2)}px)`;
+  }
+  E.c5Fundo.forEach((p, i) => {
+    const k = EASE_OUT(prog(t, T.logo + 200 + i * 120, 1000));
+    p.style.transform = `translateX(${((1 - k) * 600).toFixed(1)}px)`;
+  });
+  revela(E.c5Titulo.ws, t, T.c5Titulo, { passo: 55 });
+  {
+    const k = EASE_POP(prog(t, T.botao, 620));
+    E.botao.style.opacity = EASE_OUT(prog(t, T.botao, 300));
+    E.botao.style.transform = `scale(${lerp(0.86, 1, k).toFixed(4)})`;
+    E.botao.style.transformOrigin = '0 50%';
+  }
+  {
+    const k = EASE_OUT(prog(t, T.tagline, 700));
+    E.tagline.style.opacity = k;
+    E.tagline.style.transform = `translateY(${((1 - k) * 16).toFixed(2)}px)`;
+  }
+};
+
+// ─── Prévia no navegador: npx serve . e abra videos/<slug>.html?play ────
+if (new URLSearchParams(location.search).has('play')) {
+  document.body.classList.add('play');
+  const slug = location.pathname.split('/').pop().replace('.html', '');
+  Promise.all([fetch(`../posts/${slug}.json`).then((r) => r.json()), fetch('../marca.json').then((r) => r.json())])
+    .then(([post, marca]) => window.preparar(post, marca)).then((fim) => {
+      const palco = $('#palco'), barra = $('#barra'), botao = $('#tocar'), relogio = $('#relogio');
+      const ajusta = () => { palco.style.transform = `scale(${Math.min(innerWidth / W, (innerHeight - 56) / H)})`; };
+      ajusta(); addEventListener('resize', ajusta);
+      barra.max = fim;
+      let tocando = true, base = performance.now(), t = 0;
+      botao.onclick = () => { tocando = !tocando; botao.textContent = tocando ? 'Pausar' : 'Tocar'; base = performance.now() - t; };
+      barra.oninput = () => { t = Number(barra.value); base = performance.now() - t; };
+      const loop = (agora) => {
+        if (tocando) t = (agora - base) % (fim + 600);
+        window.quadro(Math.min(t, fim));
+        barra.value = t; relogio.textContent = (t / 1000).toFixed(2) + ' s';
+        requestAnimationFrame(loop);
+      };
+      requestAnimationFrame(loop);
+    });
+}
+</script>
+</body>
+</html>

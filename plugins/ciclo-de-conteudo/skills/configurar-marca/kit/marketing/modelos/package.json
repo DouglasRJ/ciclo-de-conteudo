@@ -1,0 +1,13 @@
+{
+  "name": "modelos-de-post",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "imagens": "node render.mjs",
+    "video": "node video.mjs",
+    "revisao": "node revisao.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.63.0"
+  }
+}

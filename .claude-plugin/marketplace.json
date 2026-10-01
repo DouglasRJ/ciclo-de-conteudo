@@ -1,0 +1,15 @@
+{
+  "name": "ciclo-de-conteudo",
+  "owner": {
+    "name": "Douglas Junior",
+    "url": "https://github.com/DouglasRJ"
+  },
+  "description": "Skills do Claude Code para planejar, escrever, desenhar e animar os posts da semana da sua marca, em português.",
+  "plugins": [
+    {
+      "name": "ciclo-de-conteudo",
+      "source": "./plugins/ciclo-de-conteudo",
+      "description": "Do assunto da semana ao post agendado: SEO, guia, posts com nota e portão de verdade, imagens e vídeo com trilha na sua marca."
+    }
+  ]
+}

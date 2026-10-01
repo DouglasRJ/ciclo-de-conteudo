@@ -1,0 +1,14 @@
+{
+  "name": "ciclo-de-conteudo",
+  "displayName": "Ciclo de Conteúdo",
+  "version": "0.1.0",
+  "description": "Do assunto da semana ao post agendado: SEO, guia, posts com nota e portão de verdade, imagens e vídeo com trilha na sua marca. Em português.",
+  "author": {
+    "name": "Douglas Junior",
+    "url": "https://github.com/DouglasRJ"
+  },
+  "homepage": "https://github.com/DouglasRJ/ciclo-de-conteudo",
+  "repository": "https://github.com/DouglasRJ/ciclo-de-conteudo",
+  "license": "MIT",
+  "keywords": ["marketing", "instagram", "posts", "carrossel", "reels", "video", "seo", "portugues", "blotato"]
+}

@@ -1,0 +1,61 @@
+{
+  "slug": "exemplo",
+  "titulo": "Ciclo de exemplo · O que você posta amanhã?",
+  "sub": "3 dias, 19h, Instagram e Facebook. Busca alvo do guia: \"como planejar posts da semana\".",
+  "notaMinima": 8.5,
+  "pecas": [
+    {
+      "titulo": "Dia 1 · Carrossel “Você não precisa de mais tempo”",
+      "onde": "Instagram + Facebook",
+      "post": "exemplo-carrossel",
+      "portao": "aprovado",
+      "legendas": {
+        "Instagram": "Você não precisa de mais tempo 🧡 Precisa parar de anotar a mesma coisa em 3 lugares.\n\n📌 Salva os 4 passos para juntar tudo num lugar só.\n\n👉 Comece grátis pelo link da bio.\n\n#empreendedor #autonomo #organizacao",
+        "Facebook": "Você não precisa de mais tempo 🧡 Precisa parar de anotar a mesma coisa em 3 lugares.\n\n📌 4 passos: escolha 1 lugar, anote no dia, separe 10 minutos na segunda, apague o que já resolveu.\n\n👉 Comece grátis: seusite.com"
+      },
+      "criterios": [
+        ["Gancho", 50, 9, "Toma posição contra a desculpa mais comum."],
+        ["Curiosidade e detalhe", 10, 8, "\"3 vezes\" e o caderno, o celular e a cabeça."],
+        ["Emoção", 10, 8, "Alívio: o problema não é você."],
+        ["Compartilhar ou salvar", 10, 9, "Os 4 passos servem sem o produto."],
+        ["Voz", 10, 8, "Direto, frases curtas."],
+        ["Polêmica", 5, 7, "Contraria \"não tenho tempo\"."],
+        ["Encaixe na rede", 5, 8, "6 slides, motivo para salvar."]
+      ],
+      "auditoria": "Auditoria em português: 0 falhas."
+    },
+    {
+      "titulo": "Dia 2 · Vídeo “Teste de 3 segundos” (18 s)",
+      "onde": "Reels no Instagram + Facebook",
+      "post": "exemplo-video",
+      "video": "exemplo-video",
+      "portao": "aprovado",
+      "roteiro": [["0 a 2 s", "Rápido: o que você posta amanhã?"], ["2 a 5 s", "3, 2, 1."], ["5 a 9 s", "Teve que pensar? Normal. Escolha 1 assunto por semana e tire 5 posts dele."], ["9 a 14 s", "A semana já pronta: o que sai em cada dia."], ["14 a 18 s", "Não falta ideia. Falta um método."]],
+      "legendas": { "Instagram": "⏱️ Responde sem abrir nada: o que você posta amanhã?\n\n👉 Comece grátis pelo link da bio.\n\n#marketingdigital #empreendedor #conteudo" },
+      "criterios": [
+        ["Gancho", 50, 9, "Desafio direto; quem assiste tenta responder."],
+        ["Curiosidade e detalhe", 10, 8, "A contagem cria tensão, a tela resolve."],
+        ["Emoção", 10, 8, "Desconforto e depois alívio (\"normal\")."],
+        ["Compartilhar ou salvar", 10, 8, "Dica que vale sem o produto."],
+        ["Voz", 10, 8, "Leve e direto."],
+        ["Polêmica", 5, 7, "\"Não falta ideia\" contraria quem se culpa."],
+        ["Encaixe na rede", 5, 9, "18 s, prende até o fim."]
+      ]
+    },
+    {
+      "titulo": "Dia 3 · Story com enquete",
+      "onde": "Instagram (figurinha de enquete à mão)",
+      "post": "exemplo-story",
+      "portao": "aprovado",
+      "aviso": "Story com figurinha não é agendado: entra à mão no Instagram.",
+      "criterios": [
+        ["Gancho", 50, 9, "Pergunta com número, fácil de responder."],
+        ["Curiosidade e detalhe", 10, 8, "Mensagem pronta no 2º quadro."],
+        ["Emoção", 10, 8, "Reconhecimento."],
+        ["Voz", 10, 8, "Próximo."],
+        ["Polêmica", 5, 8, "\"Não é frescura\"."],
+        ["Encaixe na rede", 5, 9, "Enquete puxa resposta no story."]
+      ]
+    }
+  ]
+}
